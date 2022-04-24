@@ -1,0 +1,79 @@
+{% extends "layout/main.html" %} {% block title %} Login {% endblock %} {% block
+content %}
+
+<div
+  class="min-w-screen min-h-screen flex flex-col items-center justify-center"
+>
+ 
+  <a style="width: 30%" href="/" class="mb-2 flex items-center" >
+    <span class="hover:scale-110 duration-150 transition-all bg-orange-50 font-mono"
+      >Kembali ke halaman utama</span
+    >
+  </a>
+  <form
+    class="bg-orange-200 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col"
+    style="width: 30%"
+    method="post"
+    action=""
+  >
+    <div class="mb-4">
+      <label
+        class="block text-grey-darker text-sm font-bold mb-2 font-mono"
+        for="username"
+      >
+        Username
+      </label>
+      <input
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
+        autofocus
+        name="username"
+        type="text"
+        value="{{ request.form.username }}"
+        placeholder="Username"
+      />
+    </div>
+    <div class="mb-6">
+      <label
+        class="block text-grey-darker text-sm font-bold mb-2 font-mono"
+        for="password"
+      >
+        Password
+      </label>
+      <input
+        class="shadow appearance-none border border-red rounded w-full py-2 px-3 text-grey-darker mb-3"
+        name="password"
+        type="password"
+        value="{{ request.form.password }}"
+        placeholder="******************"
+      />
+      <p class="text-red text-xs italic">Please choose a password.</p>
+    </div>
+    <div class="flex items-center justify-between">
+      <button
+        class="bg-amber-800 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
+        type="submit"
+      >
+        Sign In
+      </button>
+    </div>
+    {% if not success %}
+    <p class="text-red-500 mt-3">{{message}}</p>
+    {% endif %} {% if success %}
+    <p class="text-green-500 mt-3">{{message}}</p>
+    {% endif %}
+  </form>
+
+  <div class="flex space-x-1">
+    <p class="">Tidak punya akun?</p>
+    <a class="text-blue-500 hover:text-blue-600" href="/signup">Daftar</a>
+  </div>
+</div>
+
+<script>
+  const success = "{{success}}";
+  if (success === "True")
+    setTimeout(() => {
+      window.location.replace("/");
+    }, 200);
+</script>
+{% endblock %}

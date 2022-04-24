@@ -1,0 +1,75 @@
+{% extends "layout/main.html" %} {% block content %}
+
+<div class="h-screen w-screen p-10 bg-white font-serif">
+  <form class="bg-yellow-50 p-5 rounded-md" method="post">
+    <header class="mb-3 text-2xl font-bold">Tulis Berita</header>
+
+    <div x-show="isLoginPage" class="space-y-4">
+      <div>
+        <div class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 font-serif">
+          <input
+            class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
+            type="text"
+            placeholder="Judul"
+            name="title"
+            autofocus
+          />
+        </div>
+        {% if emptyFields["title"] == False %}
+        <p class="text-red-500 ml-4 mt-1">Masukkan Judul</p>
+        {% endif %}
+      </div>
+      <div class="w-full rounded-2xl bg-white px-4 ring-2 ring-gray-200 font-serif">
+        <input
+          type="text"
+          class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
+          name="writer"
+          placeholder="Penulis"
+        />
+      </div>
+      <div class="w-full rounded-2xl bg-white px-4 ring-2 ring-gray-200 font-serif">
+        <textarea
+          placeholder="Berita"
+          name="text"
+          rows="5"
+          class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
+        ></textarea>
+      </div>
+      <div class="flex flex-col">
+        <label for="category" class="font-semibold">Kategori</label>
+        <select name="category" class="w-80 border">
+          {% for c in categories %}
+          <option value="{{c.name}}">{{c.name}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="flex flex-col">
+        <label for="tags" class="font-semibold">Tag</label>
+        <select name="tags" multiple class="w-80 border">  
+          {% for t in tags %}
+          <option value="{{t.name}}">{{t.name}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button
+        class="w-52 rounded-2xl border-b-4 border-b-amber-800 bg-amber-800 py-3 font-bold text-white hover:bg-amber-800 active:translate-y-[0.125rem] active:border-b-amber-800"
+      >
+        Tambah Berita
+      </button>
+
+      {% if success == True %}
+      <p class="text-green-500 font-semibold text-xl">Berita berhasil dibuat</p>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<script>
+  const success = "{{success}}";
+  if (success === "True")
+    setTimeout(() => {
+      window.location.replace("/");
+    }, 1000);
+</script>
+{% endblock %}

@@ -1,0 +1,9 @@
+{
+  "news_limit": 5,
+  "jwt_secret": "jwtverysecret",
+  "access_token_cookie_name": "access_token",
+  "db": {
+    "url": "mongodb+srv://septiintan:kimjoohyuk@cluster0.zctnb.mongodb.net",
+    "name": "sbd"
+  }
+}

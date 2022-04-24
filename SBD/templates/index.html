@@ -1,0 +1,191 @@
+{% extends "layout/main.html" %} {% block title %} Berita {% endblock %} {%
+block content %}
+<div class="p-5 bg-white font-serif">
+
+  <h1 class="text-center font-bold text-2xl mb-3 bg-dark text-light">BERITA TERKINI</h1>
+
+  <div id="carouselExampleCaptions" class="w-9/12 m-auto mb-10 carousel slide relative" data-bs-ride="carousel ">
+    
+    <div class="carousel-indicators absolute right-0 bottom-0 left-0 flex justify-center p-0 mb-4">
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="Slide 1"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="1"
+        aria-label="Slide 2"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="2"
+        aria-label="Slide 3"
+      ></button>
+    </div>
+    <div class="carousel-inner relative w-full overflow-hidden">
+      <div class="carousel-item active relative float-left w-full">
+        <img
+          src="https://mdbootstrap.com/img/Photos/Slides/img%20(15).jpg"
+          class="block w-full"
+          alt="..."
+        />
+        <div class="carousel-caption hidden md:block absolute text-center">
+          <h5 class="text-xl"> Berita 1</h5>
+          <p>Some representative placeholder content for the first slide.</p>
+        </div>
+      </div>
+      <div class="carousel-item relative float-left w-full">
+        <img
+          src="https://mdbootstrap.com/img/Photos/Slides/img%20(22).jpg"
+          class="block w-full"
+          alt="..."
+        />
+        <div class="carousel-caption hidden md:block absolute text-center">
+          <h5 class="text-xl">Berita 2</h5>
+          <p>Some representative placeholder content for the second slide.</p>
+        </div>
+      </div>
+      <div class="carousel-item relative float-left w-full">
+        <img
+          src="https://mdbootstrap.com/img/Photos/Slides/img%20(23).jpg"
+          class="block w-full"
+          alt="..."
+        />
+        <div class="carousel-caption hidden md:block absolute text-center">
+          <h5 class="text-xl">Berita 3</h5>
+          <p>Some representative placeholder content for the third slide.</p>
+        </div>
+      </div>
+    </div>
+    <button
+      class="carousel-control-prev absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline left-0"
+      type="button"
+      data-bs-target="#carouselExampleCaptions"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon inline-block bg-no-repeat" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next absolute top-0 bottom-0 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline right-0"
+      type="button"
+      data-bs-target="#carouselExampleCaptions"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon inline-block bg-no-repeat" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+
+
+  <div class="grid grid-cols-5 gap-x-5">
+    <div class="col-span-4 space-y-2 flex-shrink-0">
+      {% if news|length < 1 %}
+
+      <p class="text-lg font-semibold flex items-center justify-center h-full">
+        Berita tidak ditemukan
+      </p>
+
+      {% endif %} {% for n in news %}
+      <div class="bg-yellow-50 shadow-md rounded-md p-3">
+        <a href="/news/{{n['_id']}}">
+          <p class="font-bold text-lg">{{n.title}}</p>
+        </a>
+        <p><span class="">{{n.writer}}</span></p>
+        <p>Kategori : <span class="">{{n.category}}</span></p>
+        <p class="text-black">{{n.text}}</p>
+        {% if n["tags"]|length >= 1 %}
+        <p class="my-2">
+          <span class="font-semibold">Tags : </span>
+          {% for t in n["tags"] %}
+          <span class="border rounded-full px-5 py-1">{{t}}</span>
+          {% endfor %}
+        </p>
+        {% endif %}
+        <a href="/news/{{n['_id']}}" class="text-amber-800 hover:text-amber-800">
+          Lihat Detail
+        </a>
+      </div>
+      {% endfor %}
+
+      <div class="flex justify-between">
+        {% if start == 0 %}
+        <div></div>
+        {% endif %}
+        <button
+          onclick="handlePreviousNewsClick()"
+          class="w-52 rounded-2xl border-b-4 border-b-amber-800 bg-amber-800 py-3 font-bold text-white hover:bg-amber-800 active:translate-y-[0.125rem] active:border-b-amber-800"
+          style="display: {{none if start == 0 else block}}"
+        >
+          Previous
+        </button>
+        <button
+          class="w-52 rounded-2xl border-b-4 border-b-amber-800 bg-amber-800 py-3 font-bold text-white hover:bg-amber-800 active:translate-y-[0.125rem] active:border-b-amber-800"
+          onclick="handleNextNewsClick()"
+          href="/news?start={{start+1}}"
+          style="display: {{none if not hasMore else block}}"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+    <div class="flex flex-col col-span-1">
+      <h1 class="text-xl font-semibold">Filter Kategori</h1>
+      {% for c in categories %}
+      <button
+        class="category_item py-2 shadow-md rounded-sm bg-orange-200 my-1 hover:scale-105 duration-150"
+        value="{{c.name}}"
+        onclick="handleCategoryChange(this)"
+      >
+        {{c.name}}
+      </button>
+      {% endfor %} {% if categories|length >= 1 %}
+      <button
+        class="py-2 shadow-md rounded-sm bg-amber-800 my-1 hover:scale-105 duration-150 text-white"
+        onclick="resetCategory()"
+      >
+        Reset Kategori
+      </button>
+      {% endif %} {% if news|length >= 1 %}
+      <div class="mt-5">
+        <h1 class="text-xl font-semibold">Paling sering dibaca</h1>
+        {% for mr in mostReadedNews %}
+        <p
+          class="bg-orange-200 my-1 shadow-md p-2 hover:scale-105 transition-all duration-150"
+        >
+          <a href="/news/{{mr._id}}" class="">{{mr.title}}</a>
+        </p>
+        {% endfor %}
+      </div>
+      {% endif %} {% if tags|length >= 1 %}
+      <div class="flex flex-col col-span-1">
+        <h1 class="text-xl font-semibold">Tag terfavorit</h1>
+        {% for t in tags %}
+        <button
+          class="py-2 shadow-md rounded-sm bg-orange-200 my-1 hover:scale-105 duration-150 tag_item"
+          value="{{t.name}}"
+          onclick="handleTagChange(this)"
+        >
+          {{t.name}}
+        </button>
+        {% endfor %} {% if tags|length >= 1 %}
+        <button
+          class="py-2 shadow-md rounded-sm bg-amber-800 my-1 hover:scale-105 duration-150 text-white"
+          onclick="resetTag()"
+        >
+          Reset Tag
+        </button>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

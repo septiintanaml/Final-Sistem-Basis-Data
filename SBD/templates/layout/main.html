@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+
+
+
+
+    <title>Final Sbd {% block title %} {% endblock %} - My Webpage</title>
+    {% block html_head %}{% endblock %}
+  </head>
+
+  <body class="overflow-x-hidden">
+    <nav
+
+      class="bg-orange-200 px-2 sm:px-4 py-4 rounded dark:border-amber-800 static top-0 w-screen">
+      <div class="container flex flex-wrap justify-between items-center mx-auto">
+        <span
+          class="self-center text-xl font-semibold whitespace-nowrap dark:text-white font-serif"
+          ><a href="/">Liputan Senja</a></span
+        >
+
+        <div class="hidden w-full md:block md:w-auto" id="mobile-menu">
+          <ul
+            class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium"
+          >
+            <li>
+              <a
+                href="/news"
+                class="menu-item block py-2 pr-4 pl-3 dark:text-white font-serif"
+                aria-current="page"
+                >Berita</a
+              >
+            </li>
+            <li>
+              <a
+                href="/news_create"
+                id="createNews"
+                class="menu-item block py-2 pr-4 pl-3 dark:text-white font-serif"
+                aria-current="page"
+                style="display: none"
+                >Buat Berita</a
+              >
+            </li>
+            <li>
+              <a
+                href="/create_category"
+                id="createCategory"
+                style="display: none"
+                class="menu-item block py-2 pr-4 pl-3 dark:text-white font-serif"
+                aria-current="page"
+                >Buat Kategori</a
+              >
+            </li>
+            <li>
+              <a
+                href="/create_tag"
+                id="createTag"
+                style="display: none"
+                class="menu-item block py-2 pr-4 pl-3 dark:text-white font-serif"
+                aria-current="page"
+                >Buat Tag</a
+              >
+            </li>
+            <li>
+              <a
+                href="/login"
+                id="to-login-nav"
+                class="menu-item block py-2 pr-4 pl-3 dark:text-white font-serif font-serif"
+                aria-current="page"
+                >Login</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="min-w-screen min-h-screen felx flex-col">
+      {% block content %} {% endblock %}
+    </main>
+
+    <footer id="footer">{% block footer %} {% endblock %}</footer>
+  </body>
+
+  <script>
+    /**
+     * Name: String[]
+     * value: String[]
+     */
+    function setUrlParameter(name, value) {
+      var searchParams = new URLSearchParams(window.location.search);
+
+      name.forEach((n, idx) => {
+        searchParams.set(n, value[idx]);
+      });
+
+      window.location.search = searchParams.toString();
+    }
+    function deleteUrlParameter(name) {
+      var searchParams = new URLSearchParams(window.location.search);
+      searchParams.delete(name);
+      window.location.search = searchParams.toString();
+    }
+
+    function getUrlParameter(name) {
+      var searchParams = new URLSearchParams(window.location.search);
+      return searchParams.get(name);
+    }
+
+    function handlePreviousNewsClick() {
+      const currentStart = parseInt(getUrlParameter("start"));
+      setUrlParameter(["start"], [currentStart - 1]);
+    }
+
+    function handleNextNewsClick() {
+      const currentStart = parseInt(getUrlParameter("start") || "0");
+      setUrlParameter(["start"], [currentStart + 1]);
+    }
+
+    function handleCategoryChange(e) {
+      setUrlParameter(["category", "start"], [e.value, 0]);
+    }
+    function handleTagChange(e) {
+      setUrlParameter(["tag", "start"], [e.value, 0]);
+    }
+
+    function resetCategory() {
+      deleteUrlParameter("category");
+    }
+
+    function resetTag() {
+      deleteUrlParameter("tag");
+    }
+  </script>
+
+  <script>
+    (function () {
+      var current = location.pathname.split("/")[1];
+      if (current === "") return;
+      var menuItems = document.querySelectorAll(".menu-item");
+      for (var i = 0, len = menuItems.length; i < len; i++) {
+        if (menuItems[i].getAttribute("href") === "/" + current) {
+          menuItems[i].className += " !text-blue-500 dark:!text-blue-500";
+        }
+      }
+
+      var categoryList = document.querySelectorAll(".category_item");
+      categoryList.forEach((c) => {
+        var activeCategory = getUrlParameter("category");
+        if (c.value === activeCategory) {
+          c.className += " scale-110 text-blue-500";
+        }
+      });
+
+      var tagList = document.querySelectorAll(".tag_item");
+      tagList.forEach((c) => {
+        var activeTag = getUrlParameter("tag");
+        if (c.value === activeTag) {
+          c.className += " scale-110 text-blue-500";
+        }
+      });
+
+      // Checking is login
+      const toLoginNav = document.getElementById("to-login-nav");
+      const createNewsNav = document.getElementById("createNews");
+      const createCategoryNav = document.getElementById("createCategory");
+      const createTagNav = document.getElementById("createTag");
+
+      // createNewsNav.
+      const cookies = document.cookie.split(";");
+      let isLogin = false;
+      cookies.forEach((c) => {
+        const splittedCookie = c.split("=");
+        const key = splittedCookie[0];
+        const val = splittedCookie[1];
+        if (key === "access_token_cookie") isLogin = true;
+      });
+
+      if (isLogin) {
+        toLoginNav.innerText = "Logout";
+        toLoginNav.setAttribute("href", "/logout");
+        createNewsNav.style.display = "block";
+        createCategoryNav.style.display = "block";
+        createTagNav.style.display = "block";
+      }
+    })();
+  </script>
+
+<script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
+</html>
